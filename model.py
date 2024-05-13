@@ -6,8 +6,6 @@ import os
 os.environ["SM_FRAMEWORK"] = "tf.keras"
 from tensorflow import keras
 import segmentation_models as sm
-from matplotlib import pyplot as plt
-import random
 
 from keras import backend as K
 import tensorflow.keras.backend as k
