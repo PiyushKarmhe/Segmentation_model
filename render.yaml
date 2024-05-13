@@ -2,7 +2,7 @@ services:
   # A Docker web service
   - type: web
     name: segmentation
-    runtime: python
+    runtime: python:3.8.5
     plan: free
     autoDeploy: true
     buildCommand: pip install -r requirements.txt
