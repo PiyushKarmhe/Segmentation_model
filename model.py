@@ -10,6 +10,20 @@ import segmentation_models as sm
 from keras import backend as K
 import tensorflow.keras.backend as k
 from keras.models import load_model 
+import requests
+
+# Public link to the file on Google Drive
+file_url = 'https://drive.usercontent.google.com/download?id=1OuNApW_8gQThAwUbVfdz_U6vvSMf5vKZ&export=download&authuser=0&confirm=t&uuid=cc0e07be-b802-4227-81a3-2fcfb6f2bfa8&at=APZUnTXtqP1utbWNFElLeSpeHEDp%3A1715623779757'
+
+# Path to save the downloaded file
+file_path = 'satellite-imagery_new.h5'  # Specify the desired file path
+
+# Download the file
+response = requests.get(file_url)
+with open(file_path, 'wb') as f:
+    f.write(response.content)
+
+print(f"File downloaded successfully: {file_path}")
 
 def jaccard_coef(y_true, y_pred):
   y_true_flatten = K.flatten(y_true)
