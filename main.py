@@ -42,4 +42,4 @@ async def upload_video(files: List[UploadFile] = File(...)):
         response = predict(file_path)
     
     # Return the file paths of saved images
-    return {"output": "/static/predicted_image.jpg"}
+    return {"output": response}

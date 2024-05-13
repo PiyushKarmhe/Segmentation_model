@@ -10,20 +10,9 @@ import segmentation_models as sm
 from keras import backend as K
 import tensorflow.keras.backend as k
 from keras.models import load_model 
-import requests
-
-# Public link to the file on Google Drive
-file_url = 'https://drive.usercontent.google.com/download?id=1OuNApW_8gQThAwUbVfdz_U6vvSMf5vKZ&export=download&authuser=0&confirm=t&uuid=cc0e07be-b802-4227-81a3-2fcfb6f2bfa8&at=APZUnTXtqP1utbWNFElLeSpeHEDp%3A1715623779757'
-
-# Path to save the downloaded file
-file_path = 'satellite-imagery_new.h5'  # Specify the desired file path
-
-# Download the file
-response = requests.get(file_url)
-with open(file_path, 'wb') as f:
-    f.write(response.content)
-
-print(f"File downloaded successfully: {file_path}")
+import base64
+import io
+from matplotlib.colors import ListedColormap
 
 def jaccard_coef(y_true, y_pred):
   y_true_flatten = K.flatten(y_true)
@@ -44,6 +33,16 @@ satellite_model = load_model('satellite-imagery_new.h5',
 satellite_model.get_config()
 
 def predict(ImagePathUplaoded): 
+    # Define user-defined colors for different segments
+    segment_colors = {
+      0: (0, 255, 0),   # Green
+      1: (255, 255, 0), # Yellow
+      2: (165, 42, 42), # Brown
+      3: (0, 0, 0),     # Black
+      4: (255, 165, 0), # Orange
+      5: (255, 192, 203) # Pink
+    }
+
     current_directory = os.getcwd()
     print("Current Directory:", current_directory)
 
@@ -60,11 +59,22 @@ def predict(ImagePathUplaoded):
     print("Predicted Image : ",predicted_image)
 
     predicted_image_pil = Image.fromarray(np.uint8(predicted_image))
+
+    # Create a custom colormap using the user-defined colors
+    cmap = ListedColormap([segment_colors[i] for i in range(len(segment_colors))])
+
+    predicted_image_pil = predicted_image_pil.convert('P')
+    predicted_image_pil.putpalette([x for rgb in cmap.colors for x in rgb])
+
     # Save the predicted image to a file
-    predicted_image_path = "uploaded_images/predicted_image.jpg"  # Define the file path where you want to save the image
+    predicted_image_path = "uploaded_images/predicted_image.png"  # Define the file path where you want to save the image
     predicted_image_pil.save(predicted_image_path)
 
-    return predicted_image_path
+    image_buffer = io.BytesIO()
+    predicted_image_pil.save(image_buffer, format="PNG")
+    image_base64 = base64.b64encode(image_buffer.getvalue()).decode('utf-8')
+
+    return image_base64
 
 def process_input_image(image_source):
   image = np.expand_dims(image_source, 0)
