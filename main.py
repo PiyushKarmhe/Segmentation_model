@@ -24,6 +24,10 @@ app.add_middleware(
     allow_headers=["*"],  # Allow all HTTP headers
 )
 
+@app.get("/")
+async def index():
+    return {"Working": "Chal Raha hu bhai!!"}
+
 @app.post("/upload-image/")
 async def upload_video(files: List[UploadFile] = File(...)):
     saved_file_paths = []
