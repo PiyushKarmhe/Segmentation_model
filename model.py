@@ -35,10 +35,10 @@ satellite_model.get_config()
 def predict(ImagePathUplaoded): 
     # Define user-defined colors for different segments
     segment_colors = {
-      0: (0, 255, 0),   # Green
+      0: (0, 0, 0),   # Black
       1: (255, 255, 0), # Yellow
       2: (165, 42, 42), # Brown
-      3: (0, 0, 0),     # Black
+      3: (0, 255, 0),     # Green
       4: (255, 165, 0), # Orange
       5: (255, 192, 203) # Pink
     }
